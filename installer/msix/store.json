@@ -1,0 +1,6 @@
+{
+  "_comment": "Copy these three values from Partner Center > Susharka > Product identity. Until then the build uses a local test identity.",
+  "IdentityName": "",
+  "Publisher": "",
+  "PublisherDisplayName": ""
+}

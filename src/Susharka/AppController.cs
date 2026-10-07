@@ -76,6 +76,7 @@ internal sealed class AppController : ICardActions, IDisposable
         _tray.MenuFactory = BuildTrayMenu;
 
         ApplySettings(initial: true);
+        _ = StartupRegistration.RefreshAsync();
 
         _timer.Tick += (_, _) => Tick();
         _timer.Start();
@@ -444,10 +445,10 @@ internal sealed class AppController : ICardActions, IDisposable
             _settings.Save();
             ApplySettings();
         }, check: _settings.Sounds);
-        Add("Open at login", () =>
+        Add("Open at login", async () =>
         {
-            try { StartupRegistration.Set(!StartupRegistration.IsEnabled); }
-            catch (Exception ex) { Log(ex.ToString()); }
+            var problem = await StartupRegistration.SetAsync(!StartupRegistration.IsEnabled);
+            if (problem != null) _tray.ShowBalloon("Open at login", problem);
         }, check: StartupRegistration.IsEnabled);
         Sep();
         Add("Settings…", OpenSettings);

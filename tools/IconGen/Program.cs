@@ -12,6 +12,8 @@ using System.Windows.Shapes;
 
 // Draws the Susharka app icon and writes a multi-size .ico.
 //   IconGen <design> <out.ico>        design: glass (the app icon) | line | peg
+//   IconGen png <size> <out.png>       the icon as a single PNG
+//   IconGen msix-assets <dir>         tile/store logos for the MSIX package
 //   IconGen preview <out.png>         all designs side by side at real sizes, light and dark
 internal static class Program
 {
@@ -20,6 +22,16 @@ internal static class Program
     [STAThread]
     private static void Main(string[] args)
     {
+        if (args.Length >= 3 && args[0] == "png")
+        {
+            Save(Render("glass", int.Parse(args[1])), args[2]);
+            return;
+        }
+        if (args.Length >= 2 && args[0] == "msix-assets")
+        {
+            WriteMsixAssets(args[1]);
+            return;
+        }
         if (args.Length >= 2 && args[0] == "preview")
         {
             Save(Preview(), args[1]);
@@ -222,6 +234,51 @@ internal static class Program
             Effect = new DropShadowEffect { BlurRadius = 4, ShadowDepth = 1.5, Direction = 270, Opacity = 0.35 },
         };
         return At(b, x, y);
+    }
+
+    // ───────────────────────────── MSIX assets ─────────────────────────────
+
+    /// <summary>Writes every logo the MSIX manifest references, at the scales Windows asks for.</summary>
+    private static void WriteMsixAssets(string dir)
+    {
+        System.IO.Directory.CreateDirectory(dir);
+        void Tile(string name, int w, int h, double fill, params int[] scales)
+        {
+            foreach (var sc in scales)
+            {
+                int pw = w * sc / 100, ph = h * sc / 100;
+                Save(Centered("glass", pw, ph, fill), System.IO.Path.Combine(dir, $"{name}.scale-{sc}.png"));
+            }
+        }
+        Tile("Square44x44Logo", 44, 44, 1.0, 100, 125, 150, 200, 400);
+        Tile("Square71x71Logo", 71, 71, 0.72, 100, 200);
+        Tile("Square150x150Logo", 150, 150, 0.62, 100, 200, 400);
+        Tile("Wide310x150Logo", 310, 150, 0.62, 100, 200, 400);
+        Tile("Square310x310Logo", 310, 310, 0.6, 100, 200);
+        Tile("StoreLogo", 50, 50, 1.0, 100, 200, 400);
+        Tile("SplashScreen", 620, 300, 0.5, 100, 200);
+        // Taskbar, Start and Alt+Tab use the target sizes; "unplated" variants sit directly on the taskbar.
+        foreach (var t in new[] { 16, 20, 24, 30, 32, 36, 40, 48, 60, 64, 72, 80, 96, 256 })
+        {
+            var png = Render("glass", t);
+            Save(png, System.IO.Path.Combine(dir, $"Square44x44Logo.targetsize-{t}.png"));
+            Save(png, System.IO.Path.Combine(dir, $"Square44x44Logo.targetsize-{t}_altform-unplated.png"));
+            Save(png, System.IO.Path.Combine(dir, $"Square44x44Logo.targetsize-{t}_altform-lightunplated.png"));
+        }
+        Console.WriteLine($"Wrote MSIX assets to {dir}");
+    }
+
+    /// <summary>The icon centred on a transparent canvas, taking <paramref name="fill"/> of the shorter side.</summary>
+    private static BitmapSource Centered(string design, int w, int h, double fill)
+    {
+        var size = Math.Max(16, (int)Math.Round(Math.Min(w, h) * fill));
+        var icon = Render(design, size);
+        var dv = new DrawingVisual();
+        using (var dc = dv.RenderOpen())
+            dc.DrawImage(icon, new Rect((w - size) / 2.0, (h - size) / 2.0, size, size));
+        var rtb = new RenderTargetBitmap(w, h, 96, 96, PixelFormats.Pbgra32);
+        rtb.Render(dv);
+        return rtb;
     }
 
     // ───────────────────────────── rendering ─────────────────────────────

@@ -55,10 +55,15 @@ public partial class SettingsWindow : Window
         SoundsBox.Click += (_, _) => { _settings.Sounds = SoundsBox.IsChecked == true; Commit(); };
 
         LoginBox.IsChecked = StartupRegistration.IsEnabled;
-        LoginBox.Click += (_, _) =>
+        Loaded += async (_, _) =>
         {
-            try { StartupRegistration.Set(LoginBox.IsChecked == true); }
-            catch (Exception ex) { MessageBox.Show(this, ex.Message, "Susharka"); }
+            await StartupRegistration.RefreshAsync();
+            LoginBox.IsChecked = StartupRegistration.IsEnabled;
+        };
+        LoginBox.Click += async (_, _) =>
+        {
+            var problem = await StartupRegistration.SetAsync(LoginBox.IsChecked == true);
+            if (problem != null) MessageBox.Show(this, problem, "Susharka");
             LoginBox.IsChecked = StartupRegistration.IsEnabled;
         };
 

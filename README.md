@@ -96,7 +96,8 @@ You need the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) and,
 pwsh ./build.ps1
 ```
 
-This runs the tests and writes `dist\Susharka.exe` and `dist\Susharka-Setup-<version>.exe`. The version comes
+This runs the tests and writes `dist\Susharka.exe`, `dist\Susharka-Setup-<version>.exe` and the Microsoft
+Store package `dist\Susharka-<version>-x64.msix` (see [docs/microsoft-store.md](docs/microsoft-store.md)). The version comes
 from `<Version>` in `src/Susharka/Susharka.csproj`. Use `-SkipInstaller` to build only the exe, or
 `dotnet run --project src/Susharka` while developing.
 
@@ -110,9 +111,13 @@ src/Susharka/
   Native/        Win32 interop, monitors and DPI, tray icon
   Anim/          springs and tweens on a single frame loop
 tests/           unit tests
-installer/       Inno Setup script
+installer/       Inno Setup script; msix/ holds the Store manifest, logos and identity
 tools/IconGen/   draws the app icon
 ```
+
+## Privacy
+
+Susharka collects nothing and never connects to the internet. See [PRIVACY.md](PRIVACY.md).
 
 ## Acknowledgements
 
