@@ -1,0 +1,83 @@
+<Application x:Class="Susharka.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ShutdownMode="OnExplicitShutdown">
+    <Application.Resources>
+        <FontFamily x:Key="UiFont">Segoe UI Variable Text, Segoe UI</FontFamily>
+        <SolidColorBrush x:Key="MenuBackground" Color="#F9F9FB" />
+        <SolidColorBrush x:Key="MenuBorder" Color="#1F000000" />
+        <SolidColorBrush x:Key="MenuHover" Color="#0F000000" />
+        <SolidColorBrush x:Key="MenuText" Color="#1C1D21" />
+        <SolidColorBrush x:Key="MenuMuted" Color="#80000000" />
+        <SolidColorBrush x:Key="Accent" Color="#2F6FEB" />
+
+        <!-- Rounded, airy context menus (tray and photos) -->
+        <Style TargetType="ContextMenu">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="HasDropShadow" Value="True" />
+            <Setter Property="FontFamily" Value="{StaticResource UiFont}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Margin="0,0,12,12" Background="{StaticResource MenuBackground}"
+                                BorderBrush="{StaticResource MenuBorder}" BorderThickness="1"
+                                CornerRadius="8" Padding="4">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="14" ShadowDepth="4" Direction="270" Opacity="0.18" />
+                            </Border.Effect>
+                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" MinWidth="220" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Separator" x:Key="{x:Static MenuItem.SeparatorStyleKey}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Separator">
+                        <Border Height="1" Margin="10,4" Background="{StaticResource MenuBorder}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="MenuItem">
+            <Setter Property="Foreground" Value="{StaticResource MenuText}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="Bd" CornerRadius="5" Padding="8,6,10,6" Background="Transparent">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="22" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Path x:Name="Check" Data="M0,4 L3.5,7.5 L10,0" Stroke="{TemplateBinding Foreground}"
+                                      StrokeThickness="1.6" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                      VerticalAlignment="Center" Visibility="Collapsed" />
+                                <ContentPresenter Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True"
+                                                  VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="2" Text="{TemplateBinding InputGestureText}" Margin="24,0,0,0"
+                                           Foreground="{StaticResource MenuMuted}" VerticalAlignment="Center" FontSize="12" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Check" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource MenuHover}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{StaticResource MenuMuted}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Application.Resources>
+</Application>
