@@ -4,3 +4,4 @@ dist/
 .vs/
 *.user
 .tools/
+installer/msix/store.json

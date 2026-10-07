@@ -1,7 +1,7 @@
 # Builds everything into .\dist
 #   dist\Susharka.exe                     portable single file
 #   dist\Susharka-Setup-<version>.exe     installer (needs Inno Setup 6: winget install JRSoftware.InnoSetup)
-#   dist\Susharka-<version>-x64.msix      Microsoft Store package (identity from installer\msix\store.json)
+#   dist\Susharka-<version>-x64.msix      Microsoft Store package (identity from installer\msix\store.json, git-ignored)
 #
 # Usage: pwsh ./build.ps1 [-SkipTests] [-SkipInstaller] [-SkipMsix] [-RegisterMsix]
 #   -RegisterMsix  installs the unpacked MSIX layout on this PC for testing (needs Developer Mode)
@@ -53,10 +53,11 @@ if (-not $SkipMsix) {
     if ($LASTEXITCODE) { throw "MSIX publish failed" }
     Copy-Item installer\msix\Assets (Join-Path $layout 'Assets') -Recurse
 
-    $store = Get-Content installer\msix\store.json -Raw | ConvertFrom-Json
-    $isStore = $store.IdentityName -and $store.Publisher -and $store.PublisherDisplayName
+    # The Partner Center identity lives in installer\msix\store.json, which is git-ignored (see store.example.json).
+    $store = if (Test-Path installer\msix\store.json) { Get-Content installer\msix\store.json -Raw | ConvertFrom-Json }
+    $isStore = $store -and $store.IdentityName -and $store.Publisher -and $store.PublisherDisplayName
     $identity = if ($isStore) { $store } else {
-        Write-Warning "installer\msix\store.json has no Partner Center identity yet: building with a local test identity (not uploadable)."
+        Write-Warning "No Partner Center identity in installer\msix\store.json: building with a local test identity (not uploadable)."
         [pscustomobject]@{ IdentityName = 'Susharka.LocalTest'; Publisher = 'CN=SusharkaLocalTest'; PublisherDisplayName = 'Susharka' }
     }
     $parts = @($version.Split('.')) + @('0', '0', '0')

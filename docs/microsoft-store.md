@@ -4,8 +4,9 @@ Susharka ships to the Store as an MSIX package. The Store signs it, so no code-s
 
 ## 1. Set the package identity (once)
 
-In Partner Center, open **Apps and games → Susharka → Product management → Product identity** and copy the
-three values into [`installer/msix/store.json`](../installer/msix/store.json):
+Copy [`installer/msix/store.example.json`](../installer/msix/store.example.json) to `installer/msix/store.json`.
+That file is git-ignored, so your identity stays on your machine. Then, in Partner Center, open **Apps and
+games → Susharka → Product management → Product identity** and copy the three values into it:
 
 | store.json | Partner Center |
 |---|---|
