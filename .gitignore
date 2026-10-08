@@ -5,3 +5,4 @@ dist/
 *.user
 .tools/
 installer/msix/store.json
+.claude/

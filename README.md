@@ -15,6 +15,8 @@
   <a href="https://github.com/ilivinskyi/Susharka/releases/download/v1.0/Susharka.exe"><b>Download portable .exe</b></a>
   &nbsp;·&nbsp;
   <a href="https://github.com/ilivinskyi/Susharka/releases">All releases</a>
+  &nbsp;·&nbsp;
+  <a href="https://ilivinskyi.github.io/Susharka/">Website</a>
 </p>
 
 <p align="center">
@@ -117,7 +119,7 @@ tools/IconGen/   draws the app icon
 
 ## Privacy
 
-Susharka collects nothing and never connects to the internet. See [PRIVACY.md](PRIVACY.md).
+Susharka collects nothing and never connects to the internet. See the [privacy policy](https://ilivinskyi.github.io/Susharka/privacy/).
 
 ## Acknowledgements
 

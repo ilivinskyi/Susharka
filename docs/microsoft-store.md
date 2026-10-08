@@ -39,8 +39,11 @@ Then start Susharka from the Start menu. Remove it with `Get-AppxPackage *Sushar
 
 **Properties**
 - Category: *Productivity* (or *Utilities & tools*)
-- Privacy policy URL: `https://github.com/ilivinskyi/Susharka/blob/main/PRIVACY.md`
-- Website: `https://github.com/ilivinskyi/Susharka`
+- Privacy policy URL: `https://ilivinskyi.github.io/Susharka/privacy/`
+- Website: `https://ilivinskyi.github.io/Susharka/`
+
+Push to GitHub before submitting: reviewers open these links, and a page that isn't live yet fails
+certification (policy 10.5.1).
 
 **Restricted capability.** The package declares `runFullTrust`, as every classic desktop app does. When asked
 why, answer:
